@@ -1,5 +1,5 @@
 import java.sql.*;
-//разбор занятия № 2 (уровень 3)
+//разбор занятия № 2 (уровень 3) запросы в базу данных
 public class Main {
     private static Connection connection;
     private static Statement statement;
@@ -60,30 +60,44 @@ public class Main {
 //            connection.setAutoCommit(false);
 //            pstmt = connection.prepareStatement("INSERT INTO students (name, score) VALUES (?, ?);");
 //            for (int i = 0; i < 100; i++) {
-//                pstmt.setString(1, "Bob" + i);
+//                pstmt.setString(1, "Tom" + i);
 //                pstmt.setInt(2, i);
 //                pstmt.addBatch();
 //            }
 //            pstmt.executeBatch();
 //            connection.setAutoCommit(true);
 
+//            connection.setAutoCommit(false);
+//
+//            statement.executeUpdate("INSERT INTO students (name, score) VALUES ('JUDE', 10);");
+//            //установка точки отката
+//            Savepoint sp = connection.setSavepoint();
+//
+//            try {
+//                statement.executeUpdate("INSERT INTO students (name, score) VALUES ('Bob12', 1120);");
+//            //    connection.commit();
+//            } catch (Exception e) {
+//                //если при добавлении выпало исключение - откатить до сейвпоинта
+//                connection.rollback(sp);
+//            }
+//           // connection.rollback(sp);
+//            //иначе добавить еще запись
+//            statement.executeUpdate("INSERT INTO students (name, score) VALUES ('Bob13', 1130);");
+//            connection.commit();
+
             connection.setAutoCommit(false);
-
-            statement.executeUpdate("INSERT INTO students (name, score) VALUES ('Bob11', 1110);");
-            //установка точки отката
-            Savepoint sp = connection.setSavepoint();
-
-            try {
-                statement.executeUpdate("INSERT INTO students (name, score) VALUES ('Bob12', 1120);");
-            //    connection.commit();
-            } catch (Exception e) {
-                //если при добавлении выпало исключение - откатить до сейвпоинта
-                connection.rollback(sp);
+            for (int i = 0; i < 100; i++) {
+                Savepoint sp = connection.setSavepoint();
+                try {
+                    statement.executeUpdate("INSERT INTO students (name, score) VALUES ('JUDE', 10);");
+                } catch (Exception e) {
+                    //если при добавлении выпало исключение - откатить до сейвпоинта
+                    connection.rollback(sp);
+                }
             }
-           // connection.rollback(sp);
-            //иначе добавить еще запись
-            statement.executeUpdate("INSERT INTO students (name, score) VALUES ('Bob13', 1130);");
             connection.commit();
+
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
